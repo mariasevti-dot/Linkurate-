@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2563eb">
+    <title>Linkurate - URL Shortener & Link in Bio</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- QR Code Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <link rel="manifest" href="#" id="manifest-placeholder">
+    
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+        }
+        
+        body {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .link-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .link-item:hover {
+            border-color: var(--primary-color);
+            transform: translateX(4px);
+        }
+        
+        .copy-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn:hover {
+            background: var(--secondary-color);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .bio-preview {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .bio-link {
+            display: block;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .bio-link:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            color: white;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+            color: white;
+        }
+        
+        .qr-modal {
+            text-align: center;
+        }
+        
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 440px;
+            width: 100%;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Auth Page -->
+    <div id="authPage" class="auth-container">
+        <div class="auth-card">
+            <div class="text-center mb-4">
+                <h1 class="navbar-brand mb-0">🔗 Linkurate</h1>
+                <p class="text-muted">Kelola semua tautan Anda dengan mudah</p>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h3 class="mb-4">Masuk ke Akun</h3>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="loginEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" required minlength="6">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Ingat Saya</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">Masuk</button>
+                    <div class="text-center">
+                        <a href="#" onclick="showForgotPassword()" class="text-primary">Lupa Password?</a>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <span>Belum punya akun? </span>
+                        <a href="#" onclick="showRegister()" class="text-primary">Daftar</a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" style="display:none;">
+                <h3 class="mb-4">Buat Akun Baru</h3>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="registerName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="registerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="registerPassword" required minlength="6">
+                        <small class="text-muted">Minimal 6 karakter</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">Daftar</button>
+                    <hr>
+                    <div class="text-center">
+                        <span>Sudah punya akun? </span>
+                        <a href="#" onclick="showLogin()" class="text-primary">Masuk</a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Forgot Password -->
+            <div id="forgotPasswordForm" style="display:none;">
+                <h3 class="mb-4">Lupa Password</h3>
+                <p class="text-muted">Masukkan email Anda untuk reset password</p>
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="forgotEmail" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">Kirim Link Reset</button>
+                    <div class="text-center">
+                        <a href="#" onclick="showLogin()" class="text-primary">Kembali ke Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" style="display:none;">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="#">🔗 Linkurate</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('dashboard')">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('links')">Link Saya</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('bio')">Link in Bio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="#" onclick="handleLogout()">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="container mt-4 fade-in">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="mb-4">Dashboard</h2>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <h3 id="totalLinks">0</h3>
+                        <p class="mb-0">Total Link</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <h3 id="totalClicks">0</h3>
+                        <p class="mb-0">Total Klik</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stats-card">
+                        <h3 id="bioLinks">0</h3>
+                        <p class="mb-0">Bio Links</p>
+                    </div>
+                </div>
+                
+                <!-- Quick Create Link -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Buat Link Baru</h4>
+                            <form onsubmit="createLink(event)">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">URL Asli</label>
+                                        <input type="url" class="form-control" id="originalUrl" placeholder="https://example.com" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Custom Alias (opsional)</label>
+                                        <input type="text" class="form-control" id="customAlias" placeholder="nama-unik">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-link me-2"></i>Buat Link
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Links Page -->
+        <div id="linksPage" class="container mt-4 fade-in" style="display:none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="mb-4">Link Saya</h2>
+                    <div id="linksList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bio Page -->
+        <div id="bioPage" class="container mt-4 fade-in" style="display:none;">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Edit Link in Bio</h4>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Nama Profil</label>
+                                <input type="text" class="form-control" id="bioName" onchange="updateBioPreview()">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea class="form-control" id="bioDesc" rows="2" onchange="updateBioPreview()"></textarea>
+                            </div>
+                            
+                            <h5 class="mt-4 mb-3">Tautan Bio</h5>
+                            <div id="bioLinksList"></div>
+                            
+                            <button class="btn btn-primary w-100 mb-3" onclick="addBioLink()">
+                                <i class="fas fa-plus me-2"></i>Tambah Tautan
+                            </button>
+                            
+                            <h5 class="mt-4 mb-3">Social Media</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Instagram</label>
+                                    <input type="text" class="form-control" id="socialInstagram" placeholder="username" onchange="updateBioPreview()">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">WhatsApp</label>
+                                    <input type="text" class="form-control" id="socialWhatsapp" placeholder="628xxx" onchange="updateBioPreview()">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Twitter/X</label>
+                                    <input type="text" class="form-control" id="socialTwitter" placeholder="username" onchange="updateBioPreview()">
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100" onclick="saveBio()">
+                                <i class="fas fa-save me-2"></i>Simpan Perubahan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="position-sticky" style="top: 20px;">
+                        <h4 class="mb-3">Live Preview</h4>
+                        <div class="bio-preview" id="bioPreview">
+                            <div class="text-center mb-4">
+                                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-user fa-2x text-white"></i>
+                                </div>
+                                <h4 class="mt-3 mb-2" id="previewName">Nama Anda</h4>
+                                <p class="text-muted" id="previewDesc">Deskripsi profil Anda</p>
+                            </div>
+                            <div id="previewLinks"></div>
+                            <div class="social-icons" id="previewSocials"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="modal fade" id="qrModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">QR Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body qr-modal">
+                    <div id="qrcode" class="d-inline-block"></div>
+                    <p class="mt-3 mb-0" id="qrUrl"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Simple hash function
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString(36);
+        }
+        
+        // Auth Functions
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+        }
+        
+        function showRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+        }
+        
+        function showForgotPassword() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+        }
+        
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            let users = JSON.parse(localStorage.getItem('linkurate_users') || '[]');
+            
+            if (users.find(u => u.email === email)) {
+                alert('Email sudah terdaftar!');
+                return;
+            }
+            
+            users.push({
+                id: Date.now().toString(),
+                name,
+                email,
+                password: simpleHash(password),
+                createdAt: new Date().toISOString()
+            });
+            
+            localStorage.setItem('linkurate_users', JSON.stringify(users));
+            alert('Registrasi berhasil! Silakan login.');
+            showLogin();
+        }
+        
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const remember = document.getElementById('rememberMe').checked;
+            
+            const users = JSON.parse(localStorage.getItem('linkurate_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === simpleHash(password));
+            
+            if (user) {
+                const session = {
+                    userId: user.id,
+                    email: user.email,
+                    name: user.name,
+                    remember
+                };
+                localStorage.setItem('linkurate_session', JSON.stringify(session));
+                showMainApp();
+            } else {
+                alert('Email atau password salah!');
+            }
+        }
+        
+        function handleForgotPassword(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            const users = JSON.parse(localStorage.getItem('linkurate_users') || '[]');
+            
+            if (users.find(u => u.email === email)) {
+                alert('Link reset password telah dikirim ke email Anda! (simulasi)');
+                showLogin();
+            } else {
+                alert('Email tidak ditemukan!');
+            }
+        }
+        
+        function handleLogout() {
+            if (confirm('Yakin ingin logout?')) {
+                localStorage.removeItem('linkurate_session');
+                location.reload();
+            }
+        }
+        
+        function checkAuth() {
+            const session = JSON.parse(localStorage.getItem('linkurate_session') || 'null');
+            if (session) {
+                showMainApp();
+            } else {
+                document.getElementById('authPage').style.display = 'flex';
+            }
+        }
+        
+        function showMainApp() {
+            document.getElementById('authPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            loadDashboard();
+        }
+        
+        // App Functions
+        function getCurrentUser() {
+            const session = JSON.parse(localStorage.getItem('linkurate_session'));
+            return session ? session.userId : null;
+        }
+        
+        function getUserLinks() {
+            const userId = getCurrentUser();
+            const allLinks = JSON.parse(localStorage.getItem('linkurate_links') || '[]');
+            return allLinks.filter(link => link.userId === userId);
+        }
+        
+        function saveLinks(links) {
+            const userId = getCurrentUser();
+            const allLinks = JSON.parse(localStorage.getItem('linkurate_links') || '[]');
+            const otherLinks = allLinks.filter(link => link.userId !== userId);
+            localStorage.setItem('linkurate_links', JSON.stringify([...otherLinks, ...links]));
+        }
+        
+        function generateShortCode() {
+            return Math.random().toString(36).substr(2, 6);
+        }
+        
+        function createLink(e) {
+            e.preventDefault();
+            const originalUrl = document.getElementById('originalUrl').value;
+            const customAlias = document.getElementById('customAlias').value || generateShortCode();
+            
+            const links = getUserLinks();
+            
+            if (links.find(l => l.alias === customAlias)) {
+                alert('Alias sudah digunakan! Pilih alias lain.');
+                return;
+            }
+            
+            const newLink = {
+                id: Date.now().toString(),
+                userId: getCurrentUser(),
+                originalUrl,
+                alias: customAlias,
+                shortUrl: `link.to/${customAlias}`,
+                clicks: 0,
+                createdAt: new Date().toISOString()
+            };
+            
+            links.push(newLink);
+            saveLinks(links);
+            
+            document.getElementById('originalUrl').value = '';
+            document.getElementById('customAlias').value = '';
+            
+            alert('Link berhasil dibuat!');
+            loadDashboard();
+        }
+        
+        function loadDashboard() {
+            const links = getUserLinks();
+            const bio = getUserBio();
+            
+            document.getElementById('totalLinks').textContent = links.length;
+            document.getElementById('totalClicks').textContent = links.reduce((sum, l) => sum + l.clicks, 0);
+            document.getElementById('bioLinks').textContent = bio.links?.length || 0;
+        }
+        
+        function showPage(page) {
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('linksPage').style.display = 'none';
+            document.getElementById('bioPage').style.display = 'none';
+            
+            if (page === 'dashboard') {
+                document.getElementById('dashboardPage').style.display = 'block';
+                loadDashboard();
+            } else if (page === 'links') {
+                document.getElementById('linksPage').style.display = 'block';
+                loadLinks();
+            } else if (page === 'bio') {
+                document.getElementById('bioPage').style.display = 'block';
+                loadBioEditor();
+            }
+        }
+        
+        function loadLinks() {
+            const links = getUserLinks();
+            const html = links.map(link => `
+                <div class="link-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">${link.shortUrl}</h6>
+                            <p class="text-muted mb-2 small">${link.originalUrl}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-mouse-pointer me-1"></i>${link.clicks} klik
+                            </small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="copy-btn" onclick="copyLink('${link.shortUrl}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="copy-btn" onclick="showQR('${link.shortUrl}')">
+                                <i class="fas fa-qrcode"></i>
+                            </button>
+                            <button class="copy-btn bg-danger" onclick="deleteLink('${link.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('linksList').innerHTML = html || '<p class="text-muted">Belum ada link</p>';
+        }
+        
+        function copyLink(url) {
+            navigator.clipboard.writeText(url);
+            alert('Link berhasil disalin!');
+        }
+        
+        function showQR(url) {
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: url,
+                width: 200,
+                height: 200
+            });
+            document.getElementById('qrUrl').textContent = url;
+            new bootstrap.Modal(document.getElementById('qrModal')).show();
+        }
+        
+        function deleteLink(id) {
+            if (confirm('Hapus link ini?')) {
+                const links = getUserLinks().filter(l => l.id !== id);
+                saveLinks(links);
+                loadLinks();
+                loadDashboard();
+            }
+        }
+        
+        // Bio Functions
+        function getUserBio() {
+            const userId = getCurrentUser();
+            const allBios = JSON.parse(localStorage.getItem('linkurate_bios') || '{}');
+            return allBios[userId] || { name: '', description: '', links: [], socials: {} };
+        }
+        
+        function saveBioData(bioData) {
+            const userId = getCurrentUser();
+            const allBios = JSON.parse(localStorage.getItem('linkurate_bios') || '{}');
+            allBios[userId] = bioData;
+            localStorage.setItem('linkurate_bios', JSON.stringify(allBios));
+        }
+        
+        function loadBioEditor() {
+            const bio = getUserBio();
+            document.getElementById('bioName').value = bio.name || '';
+            document.getElementById('bioDesc').value = bio.description || '';
+            document.getElementById('socialInstagram').value = bio.socials?.instagram || '';
+            document.getElementById('socialWhatsapp').value = bio.socials?.whatsapp || '';
+            document.getElementById('socialTwitter').value = bio.socials?.twitter || '';
+            
+            renderBioLinks();
+            updateBioPreview();
+        }
+        
+        function renderBioLinks() {
+            const bio = getUserBio();
+            const html = (bio.links || []).map((link, idx) => `
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" class="form-control" placeholder="Judul" value="${link.title}" 
+                                onchange="updateB
