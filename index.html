@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkora - Anti-Fraud Scanning & Security</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #393D7E;
+            --bg-color: #f8f9fa;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        /* Profile Section */
+        .profile-img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .owner-name {
+            font-weight: 400;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        /* Link Buttons */
+        .link-card {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color) !important;
+            text-decoration: none;
+            display: block;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 50px; /* Rounded Style */
+            font-weight: 600;
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .link-card:hover {
+            background-color: var(--primary-color);
+            color: #ffffff !important;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(57, 61, 126, 0.2);
+        }
+
+        /* Badge/Feature Tags */
+        .feature-badge {
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background-color: #e9ecef;
+            margin: 0 2px;
+            display: inline-block;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <header>
+            <img src="https://ui-avatars.com/api/?name=Linkora&background=393D7E&color=fff" alt="Linkora Logo" class="profile-img">
+            <h1 class="brand-name">Linkora</h1>
+            <p class="owner-name">Keamanan Digital untuk UMKM & Content Creator</p>
+        </header>
+
+        <div class="mb-4">
+            <span class="feature-badge">Anti-Penipuan</span>
+            <span class="feature-badge">Phishing Scan</span>
+            <span class="feature-badge">Safe Web</span>
+        </div>
+
+        <div class="links-wrapper">
+            <a href="https://wa.me/your-number" target="_blank" class="link-card">
+                <i class="bi bi-shield-check"></i> Cek Link Mencurigakan
+            </a>
+
+            <a href="#" target="_blank" class="link-card">
+                <i class="bi bi-search"></i> Database Penipuan Online
+            </a>
+
+            <a href="#" target="_blank" class="link-card">
+                <i class="bi bi-exclamation-triangle"></i> Lapor Konten Ilegal
+            </a>
+
+            <a href="#" target="_blank" class="link-card">
+                <i class="bi bi-info-circle"></i> Edukasi Keamanan Digital
+            </a>
+
+            <a href="https://instagram.com/your-username" target="_blank" class="link-card">
+                <i class="bi bi-instagram"></i> Ikuti Kami di Instagram
+            </a>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Linkora Security System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.querySelectorAll('.link-card').forEach(item => {
+            item.addEventListener('click', event => {
+                console.log('User clicked on: ' + item.innerText.trim());
+            });
+        });
+    </script>
+</body>
+</html>
